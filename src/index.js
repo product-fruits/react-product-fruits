@@ -44,7 +44,7 @@ export default class ProductFruits extends Component {
 
     window.productFruits = window.productFruits || {};
 
-    const fireLanguageChangedEvent = window.productFruits.language && window.productFruits.language !== language;
+    const fireLanguageChangedEvent = window.productFruits && window.productFruits.language && window.productFruits.language !== language;
 
     window.productFruits.language = language;
     window.productFruits.code = projectCode;
