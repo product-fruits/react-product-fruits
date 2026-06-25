@@ -1,21 +1,33 @@
 {
   "name": "react-product-fruits",
-  "version": "2.2.61",
+  "version": "2.2.63",
   "description": "A React component to initialize Product Fruits in React applications",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
+  "sideEffects": false,
   "files": [
     "dist"
   ],
   "types": "dist/index.d.ts",
+  "keywords": [
+    "product-fruits",
+    "react",
+    "onboarding",
+    "user-onboarding",
+    "product-adoption",
+    "in-app-guidance",
+    "nps",
+    "surveys"
+  ],
   "scripts": {
-    "rollup": "rollup -c"
+    "build": "rollup -c",
+    "prepublishOnly": "rollup -c"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/product-fruits/react-product-fruits.git"
   },
-  "author": "",
+  "author": "Product Fruits s.r.o. <dev@productfruits.com> (https://productfruits.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/product-fruits/react-product-fruits/issues"

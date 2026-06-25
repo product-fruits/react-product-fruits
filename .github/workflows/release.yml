@@ -1,0 +1,64 @@
+name: Release
+
+# Builds and publishes the package to npm when a version tag (e.g. v2.2.63) is
+# pushed, and creates a matching GitHub Release. Replaces manual build + publish.
+#
+# Flow:
+#   1. Bump "version" in package.json and merge to master.
+#   2. git tag v<version> && git push origin v<version>
+#   3. This workflow checks the tag matches package.json, builds from source,
+#      publishes to npm with provenance, and creates the GitHub Release.
+#
+# One-time setup: configure this repo + workflow as a Trusted Publisher for the
+# `react-product-fruits` package on npmjs.com (Package settings -> Publishing
+# access -> Trusted Publisher -> GitHub Actions, workflow .github/workflows/release.yml).
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write      # create the GitHub Release
+  id-token: write      # OIDC token for npm Trusted Publishing + provenance
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      # Fail early if the tag doesn't match the version in package.json.
+      - name: Verify tag matches package.json version
+        run: |
+          PKG_VERSION="v$(node -p "require('./package.json').version")"
+          if [ "$GITHUB_REF_NAME" != "$PKG_VERSION" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $PKG_VERSION" >&2
+            exit 1
+          fi
+
+      - name: Build
+        run: yarn build
+
+      # Trusted Publishing requires a recent npm.
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Publish to npm (with provenance)
+        run: npm publish --provenance --access public
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
