@@ -1,6 +1,6 @@
 {
   "name": "react-product-fruits",
-  "version": "2.2.63",
+  "version": "2.3.0",
   "description": "A React component to initialize Product Fruits in React applications",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
